@@ -1,0 +1,201 @@
+package com.example.smartbmicalculator;
+
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.os.Bundle;
+import android.speech.RecognizerIntent;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class MainActivity extends AppCompatActivity {
+
+    private static final int REQUEST_CODE_SPEECH_INPUT = 200;
+    private EditText editTextWeight;
+    private EditText editTextHeight;
+    private RadioGroup radioGroupHeightUnit;
+    private RadioButton radioButtonCm;
+    private RadioButton radioButtonInch;
+    private Button buttonCalculate;
+    private TextView textViewResult;
+    private boolean isHeightInCM = true; // Default to true as "cm" is checked by default
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_main);
+
+        editTextWeight = findViewById(R.id.editTextWeight);
+        editTextHeight = findViewById(R.id.editTextHeight);
+        buttonCalculate = findViewById(R.id.buttonCalculate);
+        textViewResult = findViewById(R.id.textViewResult);
+        radioGroupHeightUnit = findViewById(R.id.radioGroupHeightUnit);
+
+        // Set a listener on the RadioGroup to update isHeightInCM
+        radioGroupHeightUnit.setOnCheckedChangeListener((group, checkedId) -> {
+            // checkedId is the RadioButton selected
+            if (checkedId == R.id.radioButtonCm) {
+                // "cm" is selected
+                isHeightInCM = true;
+                editTextHeight.setHint("Enter height (cm)");
+                // Perform actions for cm
+            } else if (checkedId == R.id.radioButtonInch) {
+                // "inch" is selected
+                isHeightInCM = false;
+                editTextHeight.setHint("Enter height (inch)");
+                // Perform actions for inch
+            }
+        });
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        buttonCalculate.setOnClickListener(v -> calculateBmi());
+    }
+
+    public void invokeAIAssistant(View view) {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, R.string.suggestion);
+
+        try {
+            startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(this, R.string.speech_recognition_not_supported, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_SPEECH_INPUT) {
+            if (resultCode == RESULT_OK && data != null) {
+                ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                if (result != null && !result.isEmpty()) {
+                    String spokenText = result.get(0);
+                    parseSpokenTextAndCalculateBmi(spokenText);
+                }
+            }
+        }
+    }
+
+    private void parseSpokenTextAndCalculateBmi(String spokenText) {
+        // Regex to find weight and height values
+        // This is a basic regex, you might need to make it more robust for different phrasing
+        Pattern weightPattern = Pattern.compile("weight is (\\d+(\\.\\d+)?)"); // Matches "weight is 60" or "weight is 60.5"
+        Pattern heightPattern = Pattern.compile("height is (\\d+(\\.\\d+)?)"); // Matches "height is 160" or "height is 160.5"
+
+        Matcher weightMatcher = weightPattern.matcher(spokenText.toLowerCase());
+        Matcher heightMatcher = heightPattern.matcher(spokenText.toLowerCase());
+
+        String weightStr = null;
+        String heightStr = null;
+
+        if (weightMatcher.find()) {
+            weightStr = weightMatcher.group(1);
+        }
+
+        if (heightMatcher.find()) {
+            heightStr = heightMatcher.group(1);
+        }
+
+        if (weightStr != null && heightStr != null) {
+            editTextWeight.setText(weightStr);
+            editTextHeight.setText(heightStr);
+            calculateBmi();
+        } else {
+            Toast.makeText(this, R.string.could_not_understand_weight_height, Toast.LENGTH_LONG).show();
+            // You could also try to parse more complex sentences or provide more specific feedback
+            if (weightStr == null) {
+                Toast.makeText(this, R.string.could_not_find_weight, Toast.LENGTH_SHORT).show();
+            }
+            if (heightStr == null) {
+                Toast.makeText(this, R.string.could_not_find_height, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void calculateBmi() {
+        String weightStr = editTextWeight.getText().toString();
+        String heightStr = editTextHeight.getText().toString();
+
+        if (weightStr.isEmpty()) {
+            Toast.makeText(this, R.string.please_enter_weight, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (heightStr.isEmpty()) {
+            Toast.makeText(this, R.string.please_enter_height, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            float weight = Float.parseFloat(weightStr);
+            int heightCm = Integer.parseInt(heightStr);
+
+            if (heightCm == 0) {
+                Toast.makeText(this, R.string.height_cannot_be_zero, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (heightCm <= 0) {
+                Toast.makeText(this, "Height must be positive", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            float heightInMeters;
+            Toast.makeText(this, isHeightInCM + " : " + heightCm, Toast.LENGTH_SHORT).show();
+            if (isHeightInCM) {
+                heightInMeters = (float) heightCm / 100; // Convert cm to meters
+            } else {
+                heightInMeters = heightCm * 0.0254f; // Convert inches to meters
+            }
+
+            // Calculate BMI: weight (kg) / (height (m))^2
+            float bmi = weight / (heightInMeters * heightInMeters);
+
+            displayBmiResult(bmi);
+
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, R.string.please_enter_valid_numbers, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void displayBmiResult(float bmi) {
+        String bmiCategory;
+        if (bmi < 18.5) {
+            bmiCategory = "Underweight";
+        } else if (bmi < 24.9) {
+            bmiCategory = "Normal weight";
+        } else if (bmi < 29.9) {
+            bmiCategory = "Overweight";
+        } else {
+            bmiCategory = "Obese";
+        }
+
+        String resultText = String.format(Locale.getDefault(), "Your BMI: %.2f kg/m²\nCategory: %s", bmi, bmiCategory);
+        textViewResult.setText(resultText);
+    }
+}
