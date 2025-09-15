@@ -13,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -22,13 +21,12 @@ import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int REQUEST_CODE_SPEECH_INPUT = 200;
+    private static final int REQUEST_CODE_SPEECH_INPUT = 100;
     private EditText editTextWeight;
     private EditText editTextHeight;
     private RadioGroup radioGroupHeightUnit;
@@ -105,14 +103,15 @@ public class MainActivity extends AppCompatActivity {
     private void parseSpokenTextAndCalculateBmi(String spokenText) {
         // Regex to find weight and height values
         // This is a basic regex, you might need to make it more robust for different phrasing
-        Pattern weightPattern = Pattern.compile("weight is (\\d+(\\.\\d+)?)"); // Matches "weight is 60" or "weight is 60.5"
-        Pattern heightPattern = Pattern.compile("height is (\\d+(\\.\\d+)?)"); // Matches "height is 160" or "height is 160.5"
+        Pattern weightPattern = Pattern.compile("(?:weight|wait)\\s*(?:is\\s*)?(\\d+)\\s*kg"); // Matches "weight is 60 kg" or "weight 60.5 kg" or "wait is 50 kg"
+        Pattern heightPattern = Pattern.compile("height\\s*(?:is\\s*)?(\\d+)\\s*(cm|inch)"); // Matches "height is 160" or "height is 160.5"
 
         Matcher weightMatcher = weightPattern.matcher(spokenText.toLowerCase());
         Matcher heightMatcher = heightPattern.matcher(spokenText.toLowerCase());
 
         String weightStr = null;
         String heightStr = null;
+        String heightUnit = null;
 
         if (weightMatcher.find()) {
             weightStr = weightMatcher.group(1);
@@ -120,11 +119,22 @@ public class MainActivity extends AppCompatActivity {
 
         if (heightMatcher.find()) {
             heightStr = heightMatcher.group(1);
+            heightUnit = heightMatcher.group(2);
         }
 
         if (weightStr != null && heightStr != null) {
             editTextWeight.setText(weightStr);
             editTextHeight.setText(heightStr);
+            if (heightUnit.equalsIgnoreCase("inch")) {
+                radioButtonInch = findViewById(R.id.radioButtonInch);
+                radioButtonInch.setChecked(true);
+                isHeightInCM = false;
+            }
+            else {
+                radioButtonCm = findViewById(R.id.radioButtonCm);
+                radioButtonCm.setChecked(true);
+                isHeightInCM = true;
+            }
             calculateBmi();
         } else {
             Toast.makeText(this, R.string.could_not_understand_weight_height, Toast.LENGTH_LONG).show();
