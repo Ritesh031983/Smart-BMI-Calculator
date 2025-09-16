@@ -19,6 +19,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.smartbmicalculator.output.BMIResult;
+
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -29,10 +31,6 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_SPEECH_INPUT = 100;
     private EditText editTextWeight;
     private EditText editTextHeight;
-    private RadioGroup radioGroupHeightUnit;
-    private RadioButton radioButtonCm;
-    private RadioButton radioButtonInch;
-    private Button buttonCalculate;
     private TextView textViewResult;
     private boolean isHeightInCM = true; // Default to true as "cm" is checked by default
 
@@ -44,9 +42,9 @@ public class MainActivity extends AppCompatActivity {
 
         editTextWeight = findViewById(R.id.editTextWeight);
         editTextHeight = findViewById(R.id.editTextHeight);
-        buttonCalculate = findViewById(R.id.buttonCalculate);
+        Button buttonCalculate = findViewById(R.id.buttonCalculate);
         textViewResult = findViewById(R.id.textViewResult);
-        radioGroupHeightUnit = findViewById(R.id.radioGroupHeightUnit);
+        RadioGroup radioGroupHeightUnit = findViewById(R.id.radioGroupHeightUnit);
 
         // Set a listener on the RadioGroup to update isHeightInCM
         radioGroupHeightUnit.setOnCheckedChangeListener((group, checkedId) -> {
@@ -65,7 +63,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
@@ -126,12 +125,12 @@ public class MainActivity extends AppCompatActivity {
             editTextWeight.setText(weightStr);
             editTextHeight.setText(heightStr);
             if (heightUnit.equalsIgnoreCase("inch")) {
-                radioButtonInch = findViewById(R.id.radioButtonInch);
+                RadioButton radioButtonInch = findViewById(R.id.radioButtonInch);
                 radioButtonInch.setChecked(true);
                 isHeightInCM = false;
             }
             else {
-                radioButtonCm = findViewById(R.id.radioButtonCm);
+                RadioButton radioButtonCm = findViewById(R.id.radioButtonCm);
                 radioButtonCm.setChecked(true);
                 isHeightInCM = true;
             }
@@ -176,7 +175,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
             float heightInMeters;
-            Toast.makeText(this, isHeightInCM + " : " + heightCm, Toast.LENGTH_SHORT).show();
             if (isHeightInCM) {
                 heightInMeters = (float) heightCm / 100; // Convert cm to meters
             } else {
@@ -185,27 +183,11 @@ public class MainActivity extends AppCompatActivity {
 
             // Calculate BMI: weight (kg) / (height (m))^2
             float bmi = weight / (heightInMeters * heightInMeters);
-
-            displayBmiResult(bmi);
+            BMIResult bmiResult = new BMIResult(bmi, textViewResult);
+            bmiResult.displayResult();
 
         } catch (NumberFormatException e) {
             Toast.makeText(this, R.string.please_enter_valid_numbers, Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private void displayBmiResult(float bmi) {
-        String bmiCategory;
-        if (bmi < 18.5) {
-            bmiCategory = "Underweight";
-        } else if (bmi < 24.9) {
-            bmiCategory = "Normal weight";
-        } else if (bmi < 29.9) {
-            bmiCategory = "Overweight";
-        } else {
-            bmiCategory = "Obese";
-        }
-
-        String resultText = String.format(Locale.getDefault(), "Your BMI: %.2f kg/m²\nCategory: %s", bmi, bmiCategory);
-        textViewResult.setText(resultText);
     }
 }
