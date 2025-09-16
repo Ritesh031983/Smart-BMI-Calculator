@@ -12,10 +12,6 @@ public enum EBMICategory {
         this.displayName = displayName;
     }
 
-    public String getDisplayName() {
-        return displayName;
-    }
-
     // Static method to get category from BMI value
     public static EBMICategory fromBmi(float bmi) {
         if (bmi < 18.5) {

@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
         if (weightStr != null && heightStr != null) {
             editTextWeight.setText(weightStr);
             editTextHeight.setText(heightStr);
-            if (heightUnit.equalsIgnoreCase("inch")) {
+            if ((heightUnit != null) && heightUnit.equalsIgnoreCase("inch")) {
                 RadioButton radioButtonInch = findViewById(R.id.radioButtonInch);
                 radioButtonInch.setChecked(true);
                 isHeightInCM = false;
