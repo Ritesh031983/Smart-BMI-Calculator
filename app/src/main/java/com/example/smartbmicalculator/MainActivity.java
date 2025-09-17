@@ -102,8 +102,8 @@ public class MainActivity extends AppCompatActivity {
     private void parseSpokenTextAndCalculateBmi(String spokenText) {
         // Regex to find weight and height values
         // This is a basic regex, you might need to make it more robust for different phrasing
-        Pattern weightPattern = Pattern.compile("(?:weight|wait)\\s*(?:is\\s*)?(\\d+)\\s*kg"); // Matches "weight is 60 kg" or "weight 60.5 kg" or "wait is 50 kg"
-        Pattern heightPattern = Pattern.compile("height\\s*(?:is\\s*)?(\\d+)\\s*(cm|inch)"); // Matches "height is 160" or "height is 160.5"
+        Pattern weightPattern = Pattern.compile("(?:weight|wait) (?:is\\s*)?(\\d+)\\s*kg"); // Matches "weight is 60 kg" or "weight 60.5 kg" or "wait is 50 kg"
+        Pattern heightPattern = Pattern.compile("height (?:is\\s*)?(\\d+)\\s*(cm|inch)"); // Matches "height is 160" or "height is 160.5"
 
         Matcher weightMatcher = weightPattern.matcher(spokenText.toLowerCase());
         Matcher heightMatcher = heightPattern.matcher(spokenText.toLowerCase());

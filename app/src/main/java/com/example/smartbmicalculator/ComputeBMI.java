@@ -39,22 +39,22 @@ public class ComputeBMI {
 
         try {
             float weight = Float.parseFloat(weightStr);
-            int heightCm = Integer.parseInt(heightStr);
+            int height = Integer.parseInt(heightStr);
 
-            if (heightCm == 0) {
+            if (height == 0) {
                 Toast.makeText(mainActivity, R.string.height_cannot_be_zero, Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (heightCm <= 0) {
+            if (height <= 0) {
                 Toast.makeText(mainActivity, "Height must be positive", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             float heightInMeters;
             if (isHeightInCM) {
-                heightInMeters = (float) heightCm / 100; // Convert cm to meters
+                heightInMeters = (float) height / 100; // Convert cm to meters
             } else {
-                heightInMeters = heightCm * 0.0254f; // Convert inches to meters
+                heightInMeters = height * 0.0254f; // Convert inches to meters
             }
 
             // Calculate BMI: weight (kg) / (height (m))^2
