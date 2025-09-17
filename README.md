@@ -1,2 +1,12 @@
 # Smart-BMI-Calculator
-Calculate BMI of a person. It has AI assistant also.
+
+Calculate the BMI of a person.
+Weight is in kg.
+Height can be either in cm or inch.
+
+User can click on AI Assitant to say the weight & height.
+Sample:
+1: Weight is 60 kg and height is 60 inch
+2: Weight is 80 kg and height is 120 cm
+
+Value will be automatically calculated and displayed on the screen
