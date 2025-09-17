@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         Button buttonCalculate = findViewById(R.id.buttonCalculate);
         TextView textViewResult = findViewById(R.id.textViewResult);
         RadioGroup radioGroupHeightUnit = findViewById(R.id.radioGroupHeightUnit);
+        this.computeBMI = new ComputeBMI(this.editTextWeight, this.editTextHeight, textViewResult);
 
         // Set a listener on the RadioGroup to update isHeightInCM
         radioGroupHeightUnit.setOnCheckedChangeListener((group, checkedId) -> {
@@ -66,9 +67,10 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        this.computeBMI = new ComputeBMI(this.editTextWeight, this.editTextHeight, textViewResult, this.isHeightInCM);
-
-        buttonCalculate.setOnClickListener(v -> this.computeBMI.compute(MainActivity.this));
+        buttonCalculate.setOnClickListener(v -> {
+            this.computeBMI.setIsHeightInCM(this.isHeightInCM);
+            this.computeBMI.compute(MainActivity.this);
+        });
     }
 
     public void invokeAIAssistant(View view) {
@@ -134,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 radioButtonCm.setChecked(true);
                 isHeightInCM = true;
             }
+            this.computeBMI.setIsHeightInCM(this.isHeightInCM);
             this.computeBMI.compute(this);
         } else {
             Toast.makeText(this, R.string.could_not_understand_weight_height, Toast.LENGTH_LONG).show();

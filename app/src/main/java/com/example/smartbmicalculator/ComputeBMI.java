@@ -10,16 +10,18 @@ public class ComputeBMI {
     private final EditText editTextWeight;
     private final EditText editTextHeight;
     private final TextView textViewResult;
-    private final boolean isHeightInCM;
+    private boolean isHeightInCM;
 
     public ComputeBMI(EditText editTextWeight,
                       EditText editTextHeight,
-                      TextView textViewResult,
-                      boolean isHeightInCM
+                      TextView textViewResult
     ) {
         this.editTextWeight = editTextWeight;
         this.editTextHeight = editTextHeight;
         this.textViewResult = textViewResult;
+    }
+
+    public void setIsHeightInCM(boolean isHeightInCM) {
         this.isHeightInCM = isHeightInCM;
     }
 
@@ -51,6 +53,7 @@ public class ComputeBMI {
             }
 
             float heightInMeters;
+            Toast.makeText(mainActivity, "Height in CM: " + isHeightInCM + " ; " + height, Toast.LENGTH_LONG).show();
             if (isHeightInCM) {
                 heightInMeters = (float) height / 100; // Convert cm to meters
             } else {
