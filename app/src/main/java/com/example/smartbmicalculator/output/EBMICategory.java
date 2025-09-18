@@ -16,8 +16,8 @@ public enum EBMICategory {
     OBESE("Obese", 29.9, Double.MAX_VALUE);
 
     private final String displayName;
-    private double lowerValue;
-    private double upperValue;
+    private final double lowerValue;
+    private final double upperValue;
 
     EBMICategory(String displayName, double lowerValue, double upperValue) {
         this.displayName = displayName;

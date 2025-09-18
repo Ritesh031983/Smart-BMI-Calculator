@@ -31,7 +31,7 @@ public class ComputeBMI {
      * Show error message if either weight or height is empty, or if height is zero.<br>
      * Calculate the BMI using the formula: weight (kg) / (height (m))^2.<br>
      *
-     * @param mainActivity
+     * @param mainActivity Activity to show error messages
      */
     public void compute(MainActivity mainActivity) {
         String weightStr = editTextWeight.getText().toString();
