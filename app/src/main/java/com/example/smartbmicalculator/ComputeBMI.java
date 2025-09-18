@@ -25,6 +25,14 @@ public class ComputeBMI {
         this.isHeightInCM = isHeightInCM;
     }
 
+    /**
+     * Computes the BMI and displays the result.<br>
+     *
+     * Show error message if either weight or height is empty, or if height is zero.<br>
+     * Calculate the BMI using the formula: weight (kg) / (height (m))^2.<br>
+     *
+     * @param mainActivity
+     */
     public void compute(MainActivity mainActivity) {
         String weightStr = editTextWeight.getText().toString();
         String heightStr = editTextHeight.getText().toString();
@@ -43,17 +51,12 @@ public class ComputeBMI {
             float weight = Float.parseFloat(weightStr);
             int height = Integer.parseInt(heightStr);
 
-            if (height == 0) {
-                Toast.makeText(mainActivity, R.string.height_cannot_be_zero, Toast.LENGTH_SHORT).show();
-                return;
-            }
             if (height <= 0) {
-                Toast.makeText(mainActivity, "Height must be positive", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mainActivity, "Height must be positive value greater than 0", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             float heightInMeters;
-            Toast.makeText(mainActivity, "Height in CM: " + isHeightInCM + " ; " + height, Toast.LENGTH_LONG).show();
             if (isHeightInCM) {
                 heightInMeters = (float) height / 100; // Convert cm to meters
             } else {

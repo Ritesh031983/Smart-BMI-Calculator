@@ -101,6 +101,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Parse the user spoken text into weight and height for calculating BMI.
+     *
+     * @param spokenText Text spoken by the user.
+     */
     private void parseSpokenTextAndCalculateBmi(String spokenText) {
         // Regex to find weight and height values
         // This is a basic regex, you might need to make it more robust for different phrasing

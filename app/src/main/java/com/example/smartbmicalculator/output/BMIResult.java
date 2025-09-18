@@ -13,9 +13,11 @@ public class BMIResult {
         this.textViewResult = textViewResult;
     }
 
+    /**
+     * Displays the BMI result
+     */
     public void displayResult() {
-        EBMICategory bmiCategory = EBMICategory.fromBmi(bmi);
-
+        String bmiCategory = EBMICategory.fromBmi(bmi);
         String resultText = String.format(Locale.getDefault(), "Your BMI: %.2f kg/m²\nCategory: %s", bmi, bmiCategory);
         textViewResult.setText(resultText);
     }
