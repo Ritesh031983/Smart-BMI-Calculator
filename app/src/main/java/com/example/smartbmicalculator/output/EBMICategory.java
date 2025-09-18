@@ -7,13 +7,17 @@ import java.util.Arrays;
  * 0 < Underweight <= 18.5
  * 18.5 < Normal weight <= 24.9
  * 24.9 < Overweight <= 29.9
- * 29.9 < Obese
+ * 29.9 < Obese Class 1 <= 34.9
+ * 34.9 < Obese Class 2 <= 39.9
+ * 39.9 < Obese Class 3 / Severe Obesity
  */
 public enum EBMICategory {
     UNDERWEIGHT("Underweight", 0, 18.5),
     NORMAL_WEIGHT("Normal weight", 18.5, 24.9),
     OVERWEIGHT("Overweight", 24.9, 29.9),
-    OBESE("Obese", 29.9, Double.MAX_VALUE);
+    OBESE_1("Obese Class 1", 29.9, 34.9),
+    OBESE_2("Obese Class 2", 34.9, 39.9),
+    OBESE_3("Obese Class 3 / Severe Obesity", 39.9, Double.MAX_VALUE);
 
     private final String displayName;
     private final double lowerValue;
