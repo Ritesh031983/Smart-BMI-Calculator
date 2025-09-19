@@ -17,36 +17,41 @@
         android:clickable="true"
         android:contentDescription="@string/voice_input_bmi"
         android:onClick="invokeAIAssistant"
-        app:layout_constraintBottom_toTopOf="@+id/editTextWeight"
+        app:layout_constraintBottom_toTopOf="@+id/textInputLayoutWeight"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_btn_speak_now" />
 
-    <TextView
-        android:id="@+id/textView"
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/textViewWeightLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="76dp"
         android:text="@string/weight"
-        app:layout_constraintEnd_toStartOf="@+id/editTextWeight"
+        app:layout_constraintBottom_toBottomOf="@+id/textInputLayoutWeight"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/textInputLayoutWeight" />
 
-    <EditText
-        android:id="@+id/editTextWeight"
-        android:layout_width="256dp"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutWeight"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="64dp"
-        android:layout_marginEnd="88dp"
-        android:height="48dp"
-        android:autofillHints="@string/enter_weight_kg_hint"
+        android:layout_marginEnd="16dp"
         android:hint="@string/enter_weight_kg_hint"
-        android:inputType="numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/textViewWeightLabel"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextWeight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <RadioGroup
         android:id="@+id/radioGroupHeightUnit"
@@ -55,49 +60,54 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:orientation="horizontal"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintStart_toEndOf="@+id/textViewHeightLabel"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextWeight">
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutWeight">
 
-        <RadioButton
+        <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/radioButtonCm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cm"
             android:checked="true" />
 
-        <RadioButton
+        <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/radioButtonInch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/inch" />
     </RadioGroup>
 
-    <TextView
-        android:id="@+id/textView2"
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/textViewHeightLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="110dp"
         android:text="@string/height"
-        app:layout_constraintEnd_toStartOf="@+id/editTextHeight"
+        app:layout_constraintBottom_toBottomOf="@+id/textInputLayoutHeight"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toTopOf="@+id/textInputLayoutHeight" />
 
-    <EditText
-        android:id="@+id/editTextHeight"
-        android:layout_width="256dp"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutHeight"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="88dp"
-        android:height="48dp"
-        android:autofillHints="@string/enter_height_cm_hint"
+        android:layout_marginEnd="16dp"
         android:hint="@string/enter_height_cm_hint"
-        android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroupHeightUnit" />
+        app:layout_constraintStart_toEndOf="@+id/textViewHeightLabel"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroupHeightUnit">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextHeight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonCalculate"
@@ -107,15 +117,15 @@
         android:text="@string/calculate_bmi"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextHeight" />
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutHeight" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/textViewResult"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text=""
-        android:textSize="20sp"
+        android:textAppearance="?attr/textAppearanceHeadline6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonCalculate" />
