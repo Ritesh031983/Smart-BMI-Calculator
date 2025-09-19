@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.smartbmicalculator"
+    namespace = "com.ritesh.bmi.calculator"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.smartbmicalculator"
+        applicationId = "com.ritesh.bmi.calculator"
         minSdk = 31
         targetSdk = 36
         versionCode = 1
